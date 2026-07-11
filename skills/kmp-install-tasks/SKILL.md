@@ -44,6 +44,37 @@ Installs the current-OS desktop distributable for the local user, no sudo:
 psippr reference implementation lives in the root `build.gradle.kts`
 (`installDesktop`, depends on `packageAppImageFile`).
 
+## IntelliJ IDEA run actions (.run folder)
+
+Both tasks also get committed run configurations in the project's `.run/`
+folder (`installAndroid.run.xml`, `installDesktop.run.xml`) so they appear in
+the IDE's run-configuration dropdown. Template (GradleRunConfiguration):
+
+```xml
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="<taskName>" type="GradleRunConfiguration" factoryName="Gradle">
+    <ExternalSystemSettings>
+      <option name="executionName" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalSystemIdString" value="GRADLE" />
+      <option name="scriptParameters" value="" />
+      <option name="taskDescriptions"><list /></option>
+      <option name="taskNames"><list><option value="<taskName>" /></list></option>
+      <option name="vmOptions" />
+    </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+    <DebugAllEnabled>false</DebugAllEnabled>
+    <RunAsTest>false</RunAsTest>
+    <method v="2" />
+  </configuration>
+</component>
+```
+
+If the project already has other `.run/*.run.xml` gradle configs, copy one and
+swap the task name instead of using this template.
+
 ## Rules
 
 - `installAndroid` is always RELEASE — debug installs are done explicitly via
