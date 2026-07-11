@@ -1,6 +1,6 @@
 ---
 name: kmp-install-tasks
-description: Use when setting up or working on any KMP project with Android/Desktop targets. Every such project must have root gradle tasks installAndroid (release APK via adb to the connected device) and installDesktop (desktop distributable installed for the local user). Add them if missing.
+description: Use when setting up or working on any KMP project with Android/Desktop targets. Every such project must have root gradle tasks installAndroid (release APK via adb to the connected device) and installDesktop (desktop distributable installed for the local user), and BOTH must launch the app right after installing. Add them if missing.
 ---
 
 # Install tasks for KMP projects
@@ -11,22 +11,33 @@ with the project's other convenience tasks; psippr uses group `mjdev`).
 
 ## installAndroid
 
-Always installs the **release** APK (not debug) to the connected device:
+Always installs the **release** APK (not debug) to the connected device and
+**launches it** right after:
 
 ```kotlin
-val installAndroid = tasks.register<Exec>("installAndroid") {
+val installAndroid = tasks.register("installAndroid") {
     group = "<project group>"
-    description = "Installs the release APK to the connected device via adb install -r."
+    description = "Installs the release APK to the connected device and launches it."
     dependsOn(":androidApp:assembleRelease")
     val adb =
         System.getenv("ANDROID_HOME")?.let { "$it/platform-tools/adb" }
             ?: "${System.getProperty("user.home")}/Android/Sdk/platform-tools/adb"
-    commandLine(adb, "install", "-r", rootDir.resolve("androidApp/build/outputs/apk/release/<module>-release.apk").absolutePath)
+    val apk = rootDir.resolve("androidApp/build/outputs/apk/release/<module>-release.apk").absolutePath
+    val pkg = "<applicationId>"
+    doLast {
+        fun run(vararg cmd: String) {
+            val p = ProcessBuilder(*cmd).redirectErrorStream(true).start()
+            p.inputStream.copyTo(System.out)
+            check(p.waitFor() == 0) { "selhalo: ${cmd.joinToString(" ")}" }
+        }
+        run(adb, "install", "-r", apk)
+        run(adb, "shell", "am", "start", "-n", "$pkg/.MainActivity")
+    }
 }
 ```
 
-Adjust the module path to the project's android module. `adb install -r` keeps
-app data; it fails if the installed app has a different signature — never work
+Adjust the module path/activity to the project. `adb install -r` keeps app
+data; it fails if the installed app has a different signature — never work
 around that with uninstall without the user's explicit consent (data loss).
 
 ## installDesktop
@@ -40,6 +51,9 @@ Installs the current-OS desktop distributable for the local user, no sudo:
   into `~/.local/bin` instead.
 - **macOS**: copy the built `.app` into `~/Applications`.
 - **Windows**: run the built MSI/EXE installer per-user.
+
+After installing, **launch the app detached** so gradle does not wait for it:
+`ProcessBuilder(installedBinary).start()` in `doLast` (on macOS `open -a`).
 
 psippr reference implementation lives in the root `build.gradle.kts`
 (`installDesktop`, depends on `packageAppImageFile`).

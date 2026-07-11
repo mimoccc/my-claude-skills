@@ -19,6 +19,11 @@ from psippr and adjust names:
 
 ## Invariants
 
+- The bot MUST negotiate the current WA Web version via
+  `fetchLatestBaileysVersion()` and pass it to `makeWASocket({ version, … })` —
+  with the version baked into the Baileys release the server refuses
+  registration ("Connection Failure") before the QR ever shows.
+
 - Trigger is `release: published` — chains onto whatever publishes GitHub
   Releases in that project.
 - **Debug APK is always excluded** (`rm -fv assets/*-debug.apk`).
