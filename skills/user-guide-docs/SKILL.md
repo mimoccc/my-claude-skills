@@ -76,6 +76,23 @@ documents *how to use the app*, for an ordinary person.
 4. Commit `doc/` in one commit; screenshots live in git (private repos) —
    keep them reasonably small (full-res phone PNGs are fine, ~5 MB total).
 
+## App tour video
+
+A short (~1 min) screen-recorded tour following the guide chapters lives at
+`doc/promo-tour.mp4` and is linked from both guide versions. To (re)create:
+
+1. Record one segment per chapter on the phone:
+   `adb shell screenrecord --time-limit N --bit-rate 8000000 /sdcard/segX.mp4`
+   started in background while driving taps from the host. VERIFY the screen
+   (uiautomator dump) before each segment — navigation drifts silently.
+   Leave several seconds gap after a segment ends before starting the next,
+   or the previous file is truncated/corrupted (missing moov atom).
+2. Normalize: `ffmpeg -i seg.mp4 -vf "scale=540:-2,fps=30,format=yuv420p"
+   -c:v libx264 -crf 23 -an n_seg.mp4`; make a title card from
+   `color=c=black` + drawtext.
+3. Concat with the concat demuxer (`-f concat -c copy`) in guide-chapter
+   order; keep the result around 1 MB.
+
 ## Follow-ups worth offering
 
 - Generate a PDF from the guide (pandoc) for bundling into the app.
