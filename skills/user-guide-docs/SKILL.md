@@ -101,7 +101,22 @@ with the user first — empty albums or feeds show nothing). To (re)create:
 3. Concat with the concat demuxer (`-f concat -c copy`) in guide-chapter
    order; keep the result around 1 MB.
 
+## PDF manuals (createDocumentation)
+
+Each md in doc/ becomes a standalone PDF — language versions are separate
+documents with NO cross-links between them. Make `doc` a Gradle module with
+a `createDocumentation` task (see psippr: `doc/doc.gradle.kts` +
+`buildSrc/CreateDocumentationTask.kt`) rendering md → XHTML (commonmark +
+gfm-tables) → PDF (openhtmltopdf, pure JVM — no pandoc/chrome, CI-safe).
+Manual look, not IT-doc look: PSippr-style brand header on every page
+(running element + accent rule), footer with `page / pages` counter, brand
+accent on headings/tables, embedded DejaVu for diacritics, images ~240px
+centered. Give the task an IDE run action, gitignore the generated PDFs,
+and wire them into the release pipeline (collect step + CI workflow job
+that runs on a host with fonts) so they ship with each release (incl.
+WhatsApp post). Kotlin gotcha: `doc/*.md` inside a KDoc opens a NESTED
+comment — reword, don't glob, in comments.
+
 ## Follow-ups worth offering
 
-- Generate a PDF from the guide (pandoc) for bundling into the app.
 - In-app onboarding for fresh installs reusing the same chapters.
