@@ -83,10 +83,13 @@ A short (~1 min) screen-recorded tour following the guide chapters lives at
 
 1. Record one segment per chapter on the phone:
    `adb shell screenrecord --time-limit N --bit-rate 8000000 /sdcard/segX.mp4`
-   started in background while driving taps from the host. VERIFY the screen
-   (uiautomator dump) before each segment — navigation drifts silently.
-   Leave several seconds gap after a segment ends before starting the next,
-   or the previous file is truncated/corrupted (missing moov atom).
+   — FOREGROUND (blocking) whenever the segment needs no taps (idle screens):
+   backgrounded adb processes get orphaned and killed, leaving files without
+   a moov atom (unreadable). Background only segments that need parallel
+   taps, keep them inside one shell command that sleeps past the time limit,
+   and leave several seconds gap before the next recording. VERIFY the
+   screen (uiautomator dump) before each segment — navigation drifts
+   silently. Static screens encode shorter than wall time — that's normal.
 2. Normalize: `ffmpeg -i seg.mp4 -vf "scale=540:-2,fps=30,format=yuv420p"
    -c:v libx264 -crf 23 -an n_seg.mp4`; make a title card from
    `color=c=black` + drawtext.
