@@ -78,8 +78,13 @@ documents *how to use the app*, for an ordinary person.
 
 ## App tour video
 
-A short (~1 min) screen-recorded tour following the guide chapters lives at
-`doc/promo-tour.mp4` and is linked from both guide versions. To (re)create:
+A screen-recorded tour can live at `doc/promo-tour.mp4` — separate from the
+guide, never linked as a guide chapter. **A raw click-through communicates
+nothing** (learned the hard way): the video must TELL what the app does —
+every segment gets a text caption naming the feature being shown (ffmpeg
+drawtext overlay or inter-title cards), pacing slow enough to follow, and
+the feature list must be complete before recording (prepare demo content
+with the user first — empty albums or feeds show nothing). To (re)create:
 
 1. Record one segment per chapter on the phone:
    `adb shell screenrecord --time-limit N --bit-rate 8000000 /sdcard/segX.mp4`
