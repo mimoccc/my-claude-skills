@@ -13,6 +13,12 @@ description: Use whenever a git push comes into consideration, in any repo. Defa
    - a push is truly necessary for the task (e.g. CI must run to verify) —
      then ASK first (AskUserQuestion or a direct question) and push only
      after consent. This applies even in automode.
+   **NEVER automatically.** Consent covers exactly ONE push moment — the
+   commits ready at the time of the ask. It does NOT carry over to work done
+   later in the same session; every new batch of commits needs a fresh
+   explicit "push" from the user. (Escalated 2026-07-25 after a later-batch
+   push reused earlier consent — each push to main also costs a CI release
+   cycle, so an unwanted push burns real money.)
 3. **Commits are not gated.** Committing locally per step stays autonomous;
    only the push is restricted.
 4. **One ask per push moment.** If several commits are ready, one
