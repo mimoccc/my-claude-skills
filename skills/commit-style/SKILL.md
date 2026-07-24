@@ -11,7 +11,9 @@ Every commit in this repo follows these rules — no exceptions:
    conversation and code comments may be Czech/Slovak.
 2. **Short title, no colon.** One lowercase-ish imperative line, e.g.
    `fix album viewer crash inside scroll column`. No `feat:`/`fix:` prefixes, no colon.
-3. **No Co-Authored-By** and no other trailers — plain title (body only if truly needed).
+3. **Title ONLY — never a body.** No Co-Authored-By, no trailers, no explanatory
+   paragraphs under the title. The commit message is exactly one line, nothing else.
+   (User escalated this 2026-07-24 after bodies kept appearing: they are NEVER wanted.)
 4. **Commit per step.** Each logically separate change gets its own commit as work
    progresses; don't batch a day of work into one commit.
 5. **Don't break the commit/CI flow.** Push to main goes rebase + fast-forward
