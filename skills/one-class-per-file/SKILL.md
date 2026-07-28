@@ -1,6 +1,6 @@
 ---
 name: one-class-per-file
-description: HIGH PRIORITY rule for ANY Kotlin/KMP project - one class per file, every enum in its own file, every Compose component in its own file, files separated by function (data code in data packages, UI code in ui packages, etc.). Use whenever creating, moving, or reviewing Kotlin code, and during code cleanliness revisions.
+description: HIGH PRIORITY rule for ANY Kotlin/KMP project - one class per file, every enum in its own file, every Compose component in its own file, files separated by function (data code in data packages, UI code in ui packages, etc.), and NO hardcoded values - enums where a closed set of variants fits, const object/class otherwise. Use whenever creating, moving, or reviewing Kotlin code, and during code cleanliness revisions.
 ---
 
 # One class = one file, files sorted by function
@@ -31,6 +31,17 @@ existing violations are fixed as part of code-cleanliness revisions (see below).
 5. **Closely-bound small declarations** (a sealed interface with its private
    impl data classes, a class + its companion constants) may share the class
    file — the file still has ONE primary declaration it is named after.
+6. **No hardcoded values.** Magic numbers, magic strings, repeated literals and
+   inline variant strings ("red"/"green", "chat"/"dates"…) are forbidden in
+   logic and UI code:
+   - a **closed set of variants** → an `enum class` (own file, rule 2); switch
+     on the enum, never on raw strings/ints;
+   - a **standalone constant** (timeout, limit, key, URL, dimension…) → a named
+     `const val` in a dedicated constants `object`/class (or the owning class's
+     companion), named by meaning (`BYE_GRACE_MS`), never a bare literal at the
+     call site;
+   - the same literal must never be duplicated across files — one definition,
+     referenced everywhere.
 
 ## Why
 
