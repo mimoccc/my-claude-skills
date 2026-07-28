@@ -42,6 +42,16 @@ existing violations are fixed as part of code-cleanliness revisions (see below).
      call site;
    - the same literal must never be duplicated across files — one definition,
      referenced everywhere.
+7. **App-wide events via a typed Flow event bus — where it fits.** For
+   cross-cutting events between app parts, prefer the mimoccc/tvapp style
+   (see `PauseEvent` + tvlib `EventBusCore`/`PostEvent`): each event is a
+   `data class` in its own file under an `events` package, fired with
+   `postEvent(SomeEvent(...))` and consumed with `observeEvent<SomeEvent> {}`
+   over a shared Flow. Use it when unrelated modules/screens must react to the
+   same signal (pause, refresh, logout…) instead of ad-hoc singleton
+   `MutableStateFlow` counters or callback plumbing. Not mandatory everywhere —
+   plain state flows owned by a single state holder stay as they are; the bus
+   is for genuine broadcast events, only where needed.
 
 ## Why
 
