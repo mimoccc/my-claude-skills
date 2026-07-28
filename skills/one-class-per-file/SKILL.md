@@ -1,0 +1,52 @@
+---
+name: one-class-per-file
+description: HIGH PRIORITY rule for ANY Kotlin/KMP project - one class per file, every enum in its own file, every Compose component in its own file, files separated by function (data code in data packages, UI code in ui packages, etc.). Use whenever creating, moving, or reviewing Kotlin code, and during code cleanliness revisions.
+---
+
+# One class = one file, files sorted by function
+
+HIGH PRIORITY rule, valid from the start of development in every project.
+When touching code, leave it compliant — new code MUST comply immediately;
+existing violations are fixed as part of code-cleanliness revisions (see below).
+
+## The rule
+
+1. **One class per file.** Every `class` lives in its own file named after it
+   (`FooBar` → `FooBar.kt`). No unrelated top-level classes sharing a file.
+2. **Every enum in its own file.** `enum class Tab` → `Tab.kt`. Never nested
+   inside an unrelated file just because it is "small".
+3. **Every Compose component in its own file.** Each public/reusable
+   `@Composable` (a screen, a tile, a dialog, a bar…) gets its own file named
+   after it (`UserTile` → `UserTile.kt`). Tiny private helpers used ONLY by that
+   component may stay in the same file below it.
+4. **Files separated by function (package = role):**
+   - data/persistence/store/serialization → `data` packages
+   - UI composables/screens/components/theme → `ui` packages (`ui/components`,
+     `ui/screens`, `ui/theme`…)
+   - view models / app state → `vm`
+   - domain/core models and pure logic → `core` (or `domain`)
+   - platform/p2p/network layers → their own packages (`p2p`, `disco`, `call`…)
+   A file must not mix roles (no UI composable inside a data store file, no
+   persistence inside a screen file).
+5. **Closely-bound small declarations** (a sealed interface with its private
+   impl data classes, a class + its companion constants) may share the class
+   file — the file still has ONE primary declaration it is named after.
+
+## Why
+
+- Monolith files (a 4000+ line Screens.kt) make review, navigation, merges and
+  targeted fixes slow and error-prone; the user explicitly demands this
+  structure as a standing, high-priority requirement.
+
+## How to apply
+
+- **New code:** never add a second unrelated class/enum/composable to an
+  existing file; create the properly named file in the properly named package.
+- **Moving code:** plain moves, no behavior changes mixed in (see
+  kotlin-kmp-refactor-safety); keep git history readable — move in dedicated
+  commits ("split X into files"), separate from logic changes.
+- **Review/cleanliness passes:** flag every violation found; large legacy
+  monoliths are split incrementally (screen by screen, component by component)
+  in agreed batches, each batch compiled + installed before the next.
+- **Verification:** after a split batch, the project must compile for all
+  targets touched (desktop + android at minimum) before commit.
