@@ -1,13 +1,17 @@
 ---
 name: sync-skills
-description: Use whenever a skill in .claude/skills is added or modified. Mirrors skills to github.com/mimoccc/my-claude-skills - one commit per skill, intelligent two-way merge (ask user on conflict), push WITHOUT asking (standing exception to ask-before-push).
+description: Use whenever a skill in .claude/skills is added or modified. Mirrors skills to github.com/mimoccc/my-claude-skills - one commit per skill, intelligent two-way merge (ask user on conflict), push WITHOUT asking (standing exception to ask-before-push; the SOURCE project repo still needs its own ask).
 ---
 
 # Sync skills to mimoccc/my-claude-skills
 
 Whenever a skill is added or changed in `.claude/skills/`, sync it to the
 shared skills repo. The push of this sync is pre-authorized — do NOT ask
-(standing exception to the `ask-before-push` skill).
+(standing exception to the `ask-before-push` skill). Pushing the SOURCE
+project repo is a separate act and always needs its own ask.
+
+Sync only skill changes the user actually asked for — this repo is not a
+scratchpad for your own experiments.
 
 ## Working copy
 
@@ -44,4 +48,4 @@ For every skill name present locally or in the repo:
 - After all skill commits: `git push origin main` — without asking.
 - If the project's `.claude/skills` is tracked by the project repo (psippr:
   it is), also commit the skill changes there per that repo's commit style;
-  pushing the PROJECT repo still requires asking per `ask-before-push`.
+  pushing the PROJECT repo requires its own ask per `ask-before-push`.
