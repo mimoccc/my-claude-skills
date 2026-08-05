@@ -20,6 +20,12 @@ description: Use whenever a git push comes into consideration. NEVER push a proj
    after every skill change. It touches no project repo, triggers no release
    and costs nothing. Never push the source project in the same breath -
    that one always needs its own ask.
+   **Always name the repo (rule added 2026-08-05).** Never write "pushed" on
+   its own - the user reads that as "pushed psippr/main" and panics about a
+   release going out. Say which repository and branch went out
+   ("pushnuto do mimoccc/my-claude-skills (mirror skillů), psippr NE") and, in
+   the same breath, that the project repo stayed local with N commits ahead.
+   The two repos are reported separately, never merged into one sentence.
 3. **A "push" from the user covers exactly the commits that existed when they
    said it.** It never carries over.
    **Hard gate before typing `git push`:** re-read the last few user messages.
