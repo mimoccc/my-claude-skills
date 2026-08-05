@@ -1,42 +1,45 @@
 ---
 name: save-test-report
-description: Use in ANY project whenever the user asks for a test report ("vypis report pro testovani", "uloz report", "report na test", "save the report") or after finishing a batch of changes that the user will test by hand. Write the report as a markdown file named test-<YYYY-MM-DD_HH-MM>.md in the project root, not only into the chat answer.
+description: Use in ANY project after every batch of changes when the user asks for a report ("vytvor report", "uloz report", "vypis report pro testovani", "save the report"). Write it as a markdown file test-<YYYY-MM-DD_HH-MM>.md inside the test-reports/ folder in the project root - never only into the chat answer.
 ---
 
-# Test report goes into a file
+# Test report goes into test-reports/
 
-The user tests by hand, often later and on another device — a report that lives
-only in the chat is gone by then. Every requested report is therefore written to
-disk as well.
+The user tests by hand, later and often on another device — a report that lives only
+in the chat is gone by then. It is also the running record of what was already done
+and what got broken, so the user does not have to repeat himself.
 
 ## The rule
 
-1. **Trigger:** the user says "ulož report" / "vypiš report pro testování" /
-   "report na test" (or any wording asking for a testing report). Standing
-   request from 5. 8. 2026: **always** save it after such a prompt.
-2. **File:** `test-<YYYY-MM-DD_HH-MM>.md` in the **project root**, timestamp
-   from the actual system clock (`date +"%Y-%m-%d_%H-%M"`), never guessed.
-   Never overwrite an older report — a new prompt means a new file.
-3. **Content:** what was built and installed (version + install time), one
-   section per change with **what to try** and **what must happen**, plus a
-   final section listing what is NOT done / still queued, so the user does not
-   test something that was never delivered.
-4. **Language:** the language the user speaks in the session (Czech in psippr).
-5. **Answer:** keep the chat answer short and point to the file; do not paste
-   the whole report twice (see `answer-minimal`).
-6. **Commit:** the report file is part of the repo — commit it with the work
+1. **Trigger:** after any batch of work, when the user says "vytvoř report" /
+   "ulož report" / "vypiš report pro testování" (any wording asking for one).
+   Standing request from 5. 8. 2026 — always write the file, every time.
+2. **Location:** `test-reports/test-<YYYY-MM-DD_HH-MM>.md` in the project root.
+   Create the folder if missing. Timestamp from the real clock
+   (`date +"%Y-%m-%d_%H-%M"`), never guessed. Never overwrite an older report —
+   every request produces a new file, so the folder is the history.
+3. **Content:**
+   - build + install line (version, install time, or explicitly "NENAINSTALOVÁNO" and why),
+   - commits in the batch,
+   - one section per change: **what to try** and **what must happen**,
+   - **"Co jsem rozbil / regrese"** — anything this batch broke and how it was fixed,
+     including bugs the user had to report twice; this is what keeps him from
+     re-explaining the same thing,
+   - **"Nezačato / ve frontě"** — what was NOT delivered and why.
+4. **Language:** the language of the session (Czech in psippr).
+5. **Answer:** short, point to the file; do not paste the whole report into chat.
+6. **Commit:** the report is part of the repo — commit it with the batch
    (short English title, see `commit-style`).
 
 ## Why
 
-- The user installs the build and tests hours later, sometimes on a phone with
-  no access to the session; the checklist must be openable from the repo.
-- Written reports also document which build a bug was reported against.
+- The user installs and tests hours later, sometimes without access to the session.
+- The folder doubles as the project's testing history: which build a bug was
+  reported against, what was already fixed, what is still open.
 
 ## How to apply
 
 - Build/install first, then take the timestamp, then write the file.
-- Every user-visible change from the batch gets its own bullet; behaviour that
-  changed for the user (new restrictions, moved buttons) is stated explicitly,
-  including when it also restricts the user themselves.
-- Anything queued/blocked goes into the last section verbatim, with the reason.
+- State user-visible behaviour changes explicitly, including new restrictions that
+  also apply to the user himself.
+- Queued/blocked items go in verbatim with the reason — never silently dropped.
