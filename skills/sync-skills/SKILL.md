@@ -46,6 +46,9 @@ For every skill name present locally or in the repo:
   `remove skill <name>`. Short English title, no colon, no Co-Authored-By,
   no trailers.
 - After all skill commits: `git push origin main` — without asking.
+- **Report it as the mirror, by name.** Say `mimoccc/my-claude-skills` (skills
+  mirror) explicitly and add that the project repo was NOT pushed — a bare
+  "pushnuto" reads as psippr/main and scares the user (5. 8. 2026).
 - If the project's `.claude/skills` is tracked by the project repo (psippr:
   it is), also commit the skill changes there per that repo's commit style;
   pushing the PROJECT repo requires its own ask per `ask-before-push`.
