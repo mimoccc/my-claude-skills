@@ -1,6 +1,6 @@
 ---
 name: save-test-report
-description: Use in ANY project after every batch of changes when the user asks for a report ("vytvor report", "uloz report", "vypis report pro testovani", "save the report"). Write it as test-reports/<YYYY-MM-DD>/test-<HH-MM>.md - one folder per day, one file per batch - and put the commit id next to every item.
+description: Use in ANY project after every batch of changes when the user asks for a report ("vytvor report", "uloz report", "vypis report pro testovani", "save the report"), AND ALWAYS before work ends - when the user says good night / "koncim" / "jdu spat" / otherwise wraps up the session. Write it as test-reports/<YYYY-MM-DD>/test-<HH-MM>.md - one folder per day, one file per batch - and put the commit id next to every item.
 ---
 
 # Test report goes into test-reports/<den>/
@@ -14,6 +14,10 @@ done, what got broken, and which commit each thing came from.
 1. **Trigger:** after any batch of work, when the user says "vytvoř report" /
    "ulož report" / "vypiš report pro testování" (any wording asking for one).
    Standing request from 5. 8. 2026 — always write the file, every time.
+   **Also whenever work is ending** — "dobrou noc", "končím", "jdu spát", "tak zítra",
+   or any other wrap-up: before signing off, write/refresh the report for everything
+   done since the last one (pokyn 6. 8. 2026). The user tests the next day and the
+   session is gone by then; an unwritten report is lost work.
 2. **Location:** `test-reports/<YYYY-MM-DD>/test-<HH-MM>.md` in the project root —
    **a folder per day**, a file per batch. Create folders as needed. Date and time
    from the real clock (`date +"%Y-%m-%d %H-%M"`), never guessed. Never overwrite an
@@ -27,8 +31,12 @@ done, what got broken, and which commit each thing came from.
    `report button: 1. pokus a1b2c3d (klamp z odhadnutých čísel — nedosáhl do rohů),
    2. pokus 162787d4 (meze ze stejných konstant jako kotva — příčina byla duplicita
    čísel na dvou místech)`. Without that chain the same wrong fix comes back.
-5. **Content:**
+5. **Content — EVERYTHING from the batch, nothing dropped:**
    - build + install line (version, install time, or explicitly "NENAINSTALOVÁNO" and why),
+   - **every change, every note the user made and every fix, each with its commit id** —
+     including small ones (labels, paddings, wording), skill/rule changes and anything
+     the user only mentioned in passing. If it is in the batch's `git log`, it is in the
+     report; nothing is left out as "too small",
    - one section per change: **what to try** and **what must happen** + commit id,
    - **"Co jsem rozbil / regrese"** — what this batch broke and how it was fixed, with
      commit ids; this is what keeps the user from re-explaining the same thing,
