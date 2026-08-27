@@ -87,6 +87,17 @@ závažnost („kritický", „drobný"), bez obratů typu „bohužel", „neš
 - Když se dřívější záznam ukázal jako chybný, nechat ho a přidat opravu pod něj. Historie
   omylů je součástí důkazu.
 
+## Kam se zapisuje
+
+**Vždy na ZAČÁTEK souboru, hned pod hlavičku.** Nikdy ne „před nějaký existující nadpis" —
+tak se 27. 8. stalo, že nejnovější záznam skončil pod starším a vlastník to viděl jako
+schovávání (jeho slova: „aby jsem to nedohledal?", „abys schoval sve sabotaze").
+
+- Pořadí je striktně od nejnovějšího; po každém zápisu se ověří `grep "^## " ai-incidents.md | head -3`.
+- Každý záznam má v nadpisu DATUM A ČAS. Sekce bez data (výpočty, přílohy) patří dovnitř
+  záznamu jako `###`, ne na úroveň `##`.
+- Nadpis pojmenovává, CO JSEM UDĚLAL, ne jen jak se to projevilo.
+
 ## Kdy se píše
 
 Hned, jak je incident rozpoznaný — před další prací, ne na konci dne. Když uživatel řekne
