@@ -35,6 +35,11 @@ it is recognised — by the assistant, without being asked twice.
 - **Pravidlo, aby se to neopakovalo:** rule (and which skill/memory now carries it)
 ```
 
+## Obsah záznamu
+
+Formu i obsah zápisu diktuje skill `incident-facts-only` (vyšší priorita): strojový protokol,
+jen fakta s doložitelným zdrojem, žádné dedukce, žádné přikrášlování, prázdné pole = `neznámo`.
+
 ## How to apply
 
 - Write the entry **as soon as the incident is recognised**, before the next task —
