@@ -28,9 +28,19 @@ existing violations are fixed as part of code-cleanliness revisions (see below).
    - platform/p2p/network layers → their own packages (`p2p`, `disco`, `call`…)
    A file must not mix roles (no UI composable inside a data store file, no
    persistence inside a screen file).
-5. **Closely-bound small declarations** (a sealed interface with its private
-   impl data classes, a class + its companion constants) may share the class
-   file — the file still has ONE primary declaration it is named after.
+5. **No exceptions for "closely bound" declarations** (tightened 1. 9. 2026:
+   "jedna class/object/enum jeden soubor i kdyby jich melo byt milion").
+   - A sealed hierarchy is ALSO split: Kotlin only requires subclasses in the
+     same package+module, not the same file. The sealed parent keeps its file;
+     every implementation gets its own.
+   - If the hierarchy is SERIALIZED (kotlinx polymorphic/sealed), the class FQN
+     is the wire discriminator — pin the ORIGINAL name with `@SerialName(...)`
+     on every subclass BEFORE moving, and add a wire-compat test, or old
+     clients stop understanding the new build.
+   - A `private` top-level class moved to its own file becomes `internal`
+     (file-private visibility cannot cross files).
+   - Only nested types that are genuinely part of their parent's contract
+     (a companion object, an inner class using outer state) stay nested.
 6. **No hardcoded values.** Magic numbers, magic strings, repeated literals and
    inline variant strings ("red"/"green", "chat"/"dates"…) are forbidden in
    logic and UI code:
@@ -71,3 +81,17 @@ existing violations are fixed as part of code-cleanliness revisions (see below).
   in agreed batches, each batch compiled + installed before the next.
 - **Verification:** after a split batch, the project must compile for all
   targets touched (desktop + android at minimum) before commit.
+
+## Mechanical-split lessons (paid for on 1. 9. 2026)
+
+- **Operator imports are textually invisible.** `import androidx.compose.runtime.getValue`/
+  `setValue` (delegation `by`), `provideDelegate`, `component1/2` never appear
+  as tokens in the body — an "unused import" cleanup that greps for the name
+  WILL remove them and break every `var x by remember`. Whitelist them.
+- **Raw strings and char literals break naive brace counting.** `"""…"""` and
+  `'{'`/`'"'` desync a line-based parser; any automated splitter must lex
+  strings, raw strings, char literals and comments before counting brackets.
+  Verify by compiling EVERY touched module before commit, and check files that
+  contain `"""` by hand.
+- **Never split generated code** (`build/`, `generated/`, uniffi bindings) —
+  the generator recreates the old layout on next run.
