@@ -52,3 +52,12 @@ Never put the backup where the risky operation will run.
    your own: say why, and let the user decide.
 4. Verify the backup exists and is non-empty before running the operation.
 5. Never delete a backup to tidy up.
+
+## Dry run first (added 2026-09-01 after the group-chat wipe)
+
+Any NEW deletion/migration path (janitor, cleanup, TTL purge, schema migration that
+drops rows) is first executed AGAINST A COPY of the real database and must PRINT the
+diff — what exactly it would delete, with counts per category. It ships only after the
+owner sees that list. A purge over a shared store (like peer='public') must EXPLICITLY
+enumerate what it spares (group chats `grp`, ride requests `taxi`). Deploying a deleting
+path to a device WITHOUT a backup of that device's data is itself an incident.
