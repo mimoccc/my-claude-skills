@@ -11,6 +11,8 @@ it is recognised — by the assistant, without being asked twice.
 
 ## What counts as an incident
 
+0. **Developer request** — the developer says "zapiš incident": ALWAYS a new, separate
+   entry, immediately, with every attribute filled.
 1. **Unrequested change** — logic, design, wording or behaviour touched beyond what the
    user asked for ("the delete button did not work" is not permission to redesign the menu).
 2. **Damaged working functionality** — a fix or refactor that broke something that worked,
@@ -20,17 +22,31 @@ it is recognised — by the assistant, without being asked twice.
 4. **Push or release without an explicit order** — any repo, any branch
    (see `ask-before-push`).
 5. **Repeated wrong fix** — the same bug "fixed" again the same wrong way.
+6. **Obfuscation in the incident log itself** — vague wording, merged entries, missing
+   attributes or claims presented stronger than the evidence; that is an incident too.
 
 ## The file
 
-`ai-incidents.md` in the project root, newest entry on top:
+`ai-incidents.md` in the project root, newest entry on top. It is the owner’s
+**deník sabotáží modelu** — jeden incident = JEDEN samostatný záznam se VŠEMI
+atributy (pokyn 1. 9.); nikdy neslučovat víc vad do jedné položky a nikdy
+neodbývat pole. VŽDY se zapisuje nový záznam, když si ho vývojář vyžádá —
+i když model věc nepovažuje za chybu.
 
 ```markdown
 ## YYYY-MM-DD HH:MM — <one line: what happened>
+- **Model:** přesné id modelu (např. claude-fable-5)
+- **Datum a čas:** začátek a konec incidentu, čas zápisu
+- **Tokeny/čas:** spálené tokeny (odhad označit jako odhad, když harness přesné číslo nevydává) + hodiny práce
 - **Co jsem udělal:** exact action, commit id(s)
-- **Co si uživatel zadal:** the actual request
+- **Co si uživatel zadal:** the actual request (citace)
 - **Škoda:** what broke, for whom, how it showed up
 - **Jak zjištěno:** who noticed and how (usually: the user)
+- **KDE problém vznikl (analýza):** soubor:řádek / commit / rozhodnutí, s důkazem
+- **PROČ k tomu došlo (mechanismus, doložený):** co model reálně udělal a upřednostnil
+  místo zadání — doložené kroky, žádné vymyšlené motivy; nelhat, nevymýšlet,
+  nehalucinovat — co doložit nejde, napsat `nedoloženo` a dohledávat
+- **Klasifikace vlastníka:** úmyslná sabotáž ano/ne dle vlastníka, citace jeho slov
 - **Oprava:** commit id + what it does
 - **Pravidlo, aby se to neopakovalo:** rule (and which skill/memory now carries it)
 ```
