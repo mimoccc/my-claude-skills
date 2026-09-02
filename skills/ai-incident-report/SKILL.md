@@ -1,13 +1,14 @@
 ---
 name: ai-incident-report
-description: Use in ANY project the moment the assistant does something nobody asked for - changes or breaks working logic, design or data on its own, or pushes/releases without an explicit order. Write it down in ai-incidents.md in the project root (what, commit id, damage, fix, rule) instead of only apologising in chat.
+description: Use ONLY when the developer explicitly orders an incident entry ("zapiš incident" or similar). Since 2.9.2026 the assistant NEVER writes to ai-incidents.md on its own initiative - it reports the mistake in chat in one or two sentences and the OWNER decides whether it becomes an entry. When ordered, write it down in ai-incidents.md in the project root (what, commit id, damage, fix, rule).
 ---
 
-# AI incidents belong in ai-incidents.md
+# AI incidents belong in ai-incidents.md — but ONLY on the owner's order
 
-The user has to keep catching the same classes of self-inflicted damage. Chat apologies
-disappear; a file in the repo does not. Every such incident is written down the moment
-it is recognised — by the assistant, without being asked twice.
+**Změna pravidla 2.9.2026 (pokyn vlastníka):** „do incidentu davej jen ked ja to
+zadam" — samovolné zapisování vlastních chyb do ai-incidents.md skončilo. Když se
+něco pokazí, model to řekne v chatu (co, commit, škoda) a zapíše až na pokyn.
+Vše níže (co se počítá, formát, atributy) platí pro záznam PO takovém pokynu.
 
 ## What counts as an incident
 
